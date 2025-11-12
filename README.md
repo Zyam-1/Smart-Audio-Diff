@@ -13,15 +13,21 @@
 - Clone or open the project in your editor.
 - Install dependencies:
 
-- npm install
+```bash
+npm install
+```
 
 - Build / typecheck:
 
-- npm run build
+```bash
+npm run build
+```
 
 - Run tests (if present):
 
-- npm test
+```bash
+npm test
+```
 
 ## 🧭 Project layout
 
@@ -35,11 +41,11 @@
 
 - Example (pseudo):
 
-- ```ts
-- import { compareAudio } from './src/audio/audioProcessor'
-- const diff = await compareAudio(fileA, fileB)
-- console.log(diff)
-- ```
+```ts
+import { compareAudio } from './src/audio/audioProcessor'
+const diff = await compareAudio(fileA, fileB)
+console.log(diff)
+```
 
 ## 🤝 Contributing
 
@@ -52,5 +58,3 @@
 - Open an issue or PR on the repo for questions or contributions.
 
 ---
-
-Made with ❤️ and a few helpful emojis. Feel free to ask me to rename this to the conventional `README.md` or to expand any section.
