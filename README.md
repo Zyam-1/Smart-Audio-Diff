@@ -1,14 +1,14 @@
-# 🎵 Smart Audio Diff
+# Smart Audio Diff
 
 - A tiny toolkit to compute and inspect differences between audio files.
 - Built in TypeScript, located in `src/`.
 
-## 🔧 What it does
+## What it does
 
 - Computes diffs between audio representations (waveforms / features).
 - Provides utilities to read audio files and produce human-friendly reports.
 
-## 🚀 Quick start
+## Quick start
 
 - Clone or open the project in your editor.
 - Install dependencies:
@@ -29,13 +29,13 @@ npm run build
 npm test
 ```
 
-## 🧭 Project layout
+## Project layout
 
 - `src/audio` - audio processing logic (e.g. `audioProcessor.ts`)
 - `src/types` - type definitions
 - `src/utils` - helper utilities (file IO, etc.)
 
-## 🛠 Usage
+## Usage
 
 - Import the audio processor from `src/audio/audioProcessor.ts` and call the exposed functions to compute diffs.
 
@@ -47,13 +47,13 @@ const diff = await compareAudio(fileA, fileB)
 console.log(diff)
 ```
 
-## 🤝 Contributing
+## Contributing
 
 - Fork the repo - make small, focused PRs.
 - Use hyphen-style bullets for new README entries.
 - Add tests for new behavior.
 
-## ✉️ Contact
+## Contact
 
 - Open an issue or PR on the repo for questions or contributions.
 
