@@ -1,8 +1,9 @@
-import { normalizeAudio, getWaveForm} from "./audio/audioProcessor.js";
-import { compareWaveforms } from "./audio/waveFormDiff.js";
-import { compareTranscripts } from "./audio/transcriptDiff.js";
-import { DiffResult } from "./types/diff.js";
-import { deleteFile } from "./utils/fileUtils.js";
+import { normalizeAudio, getWaveForm} from "./audio/audioProcessor";
+import { compareWaveforms } from "./audio/waveFormDiff";
+import { compareTranscripts } from "./audio/transcriptDiff";
+import { DiffResult } from "./types/diff";
+import { deleteFile } from "./utils/fileUtils";
+import { Diff } from "diff-match-patch";
 
 
 //Main Functionality to compare two audio files and their transcripts
