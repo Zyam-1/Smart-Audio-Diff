@@ -2,7 +2,7 @@ import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import path from "path";
 import { WaveFile } from "wavefile";
-import { validateFile, deleteFile } from "../utils/fileUtils";
+import { validateFile, deleteFile } from "../utils/fileUtils.js";
 
 
 //normalize audio to WAV, mono, 44.1kHz
