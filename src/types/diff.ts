@@ -1,4 +1,4 @@
-export type DiffType = "unchanged" | "added" | "removed" | "rephrased";
+export type DiffType = "unchanged" | "added" | "removed" | "rephrased" ;
 
 export interface DiffSegment {
     start: number; //start time in seconds
