@@ -1,6 +1,6 @@
 {
   "name": "smart-audio-diff",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A TypeScript audio diffing library for generating and applying waveform-based changes between audio files.",
   "keywords": [
     "audio",
@@ -26,7 +26,7 @@
     "dist"
   ],
   "scripts": {
-  "build": "tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json",
+    "build": "tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json",
     "prepare": "npm run build",
     "format": "prettier --write .",
     "lint": "eslint . --ext .ts",
