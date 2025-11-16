@@ -2,7 +2,7 @@ import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import path from "path";
 import { WaveFile } from "wavefile";
-import { validateFile, deleteFile } from "../utils/fileUtils";
+import { validateFile } from "../utils/fileUtils.js";
 
 
 //normalize audio to WAV, mono, 44.1kHz
@@ -16,13 +16,13 @@ export const normalizeAudio = async (inputPath: string): Promise<string> => {
     );
 
     return new Promise((resolve, reject) => {
-        ffmpeg(inputPath)
+        (ffmpeg as any)(inputPath)
             .audioChannels(1)
             .audioFrequency(44100)
             .toFormat("wav")
             .on("end", () => resolve(outputPath))
-            .on("error", (err: any) => reject(err))
-    })
+            .on("error", (err: any) => reject(err));
+    });
 }
 
 

@@ -1,4 +1,4 @@
-import { DiffSegment, DiffResult } from "../types/diff";
+import { DiffSegment, DiffResult } from "../types/diff.js";
 import {diff_match_patch} from "diff-match-patch";
 
 //compare two transcripts using diff-match-patch

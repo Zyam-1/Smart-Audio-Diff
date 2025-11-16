@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import {compareWaveforms} from "../src/audio/waveFormDiff";
+import {compareWaveforms} from "../src/audio/waveFormDiff.js";
 
 
 describe("Waveform Comparison Tests", () => {

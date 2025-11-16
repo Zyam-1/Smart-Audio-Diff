@@ -1,4 +1,4 @@
-import { DiffSegment, DiffType } from "../types/diff";
+import { DiffSegment, DiffType } from "../types/diff.js";
 
 
 // compare two waveform using RMS over sliding windows
