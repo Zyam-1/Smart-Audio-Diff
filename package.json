@@ -1,17 +1,20 @@
 {
   "name": "smart-audio-diff",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A TypeScript audio diffing library for generating and applying waveform-based changes between audio files.",
-  "keywords": ["audio", "diff", "typescript", "ffmpeg", "wavefile"],
+  "keywords": [
+    "audio",
+    "diff",
+    "typescript",
+    "ffmpeg",
+    "wavefile"
+  ],
   "author": "Zyam",
   "license": "MIT",
-
   "type": "module",
-
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -19,11 +22,9 @@
       "types": "./dist/index.d.ts"
     }
   },
-
   "files": [
     "dist"
   ],
-
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
@@ -31,7 +32,6 @@
     "lint": "eslint . --ext .ts",
     "test": "echo \"No tests yet\" && exit 0"
   },
-
   "devDependencies": {
     "@types/diff-match-patch": "^1.0.36",
     "@types/fluent-ffmpeg": "^2.1.28",
@@ -43,7 +43,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
-
   "dependencies": {
     "audiobuffer": "^0.2.0",
     "diff-match-patch": "^1.0.5",
