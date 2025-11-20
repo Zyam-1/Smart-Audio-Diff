@@ -1,121 +1,264 @@
 # Smart Audio Diff
 
-- A tiny toolkit to compute and inspect differences between audio files.
-- Built in TypeScript, located in `src/`.
+A TypeScript audio diffing library for comparing WAV audio files and their transcripts. Computes differences between audio waveforms and text transcripts with detailed segment analysis.
 
-## What it does
+**Features:**
+- 🔊 Compare audio waveforms between two WAV files
+- 📝 Compare text transcripts using diff-match-patch
+- 📊 Get detailed segment information with timing (start/end in seconds)
+- 🚀 Pure TypeScript with full type safety
+- 📦 ESM-first, lightweight library
 
-- Computes diffs between audio representations (waveforms / features).
-- Provides utilities to read audio files and produce human-friendly reports.
+## Installation
 
-## Quick start
-
-- Clone or open the project in your editor.
-- Install dependencies:
-
-```bash
-npm install
-```
-
-- Build / typecheck:
+### From npm
 
 ```bash
-npm run build
+npm install smart-audio-diff
 ```
 
-- Run tests (if present):
+### From GitHub (Development)
 
 ```bash
-npm test
+npm install https://github.com/Zyam-1/Smart-Audio-Diff.git
 ```
 
-## Project layout
+## Prerequisites
 
-- `src/audio` - audio processing logic (e.g. `audioProcessor.ts`)
-- `src/types` - type definitions
-- `src/utils` - helper utilities (file IO, etc.)
+This package works with WAV audio files. Ensure your audio files are in WAV format before using this library.
 
-## 🛠 Usage
+## Usage
 
-- The package exports a top-level named function `compareAudio` which you can import in ESM-compatible Node apps:
+### Basic Comparison
 
-```js
+Compare two WAV audio files:
+
+```javascript
 import { compareAudio } from 'smart-audio-diff';
 
-const diff = await compareAudio('path/to/a.wav', 'path/to/b.wav', {
-	transcriptA: 'text a',
-	transcriptB: 'text b'
+async function compareSongs() {
+  try {
+    const diff = await compareAudio('./song_original.wav', './song_modified.wav');
+    
+    console.log('Waveform Segments:', diff.segments);
+    // Output: [
+    //   { start: 0, end: 2.5, type: 'unchanged' },
+    //   { start: 2.5, end: 5.1, type: 'added' },
+    //   { start: 5.1, end: 10.0, type: 'unchanged' }
+    // ]
+  } catch (error) {
+    console.error('Error comparing audio:', error.message);
+  }
+}
+
+compareSongs();
+```
+
+### With Transcripts
+
+Compare audio files along with their text transcripts:
+
+```javascript
+import { compareAudio } from 'smart-audio-diff';
+
+async function compareWithText() {
+  const diff = await compareAudio(
+    './audio1.wav',
+    './audio2.wav',
+    {
+      transcriptA: 'The quick brown fox jumps over the lazy dog',
+      transcriptB: 'The quick brown fox jumps over the lazy cat'
+    }
+  );
+
+  console.log('Audio Diff:', diff.segments);
+  console.log('Transcript Diff:', diff.transcriptDiff);
+  // Output: [
+  //   'UNCHANGED: The quick brown fox jumps over the lazy ',
+  //   'REMOVED: dog',
+  //   'ADDED: cat'
+  // ]
+}
+
+compareWithText();
+```
+
+### Return Value
+
+The \`compareAudio\` function returns a \`DiffResult\` object:
+
+```typescript
+interface DiffResult {
+  segments: DiffSegment[];        // Waveform diff segments with timing
+  transcriptDiff: string[];       // Transcript differences as strings
+  waveformDiff: number[];         // Raw waveform diff data
+}
+
+interface DiffSegment {
+  start: number;                  // Start time in seconds
+  end: number;                    // End time in seconds
+  type: 'unchanged' | 'added' | 'removed' | 'rephrased';
+}
+```
+
+## API Reference
+
+### \`compareAudio(fileA, fileB, options?)\`
+
+Compares two audio files and optionally their transcripts.
+
+**Parameters:**
+- \`fileA\` (string) - Path to the first WAV audio file
+- \`fileB\` (string) - Path to the second WAV audio file
+- \`options\` (optional object)
+  - \`transcriptA\` (string) - Transcript of first audio
+  - \`transcriptB\` (string) - Transcript of second audio
+
+**Returns:** \`Promise<DiffResult>\` - Comparison results with segments and transcript diffs
+
+**Throws:** Error if files don't exist or are invalid formats
+
+**Example:**
+```javascript
+const result = await compareAudio('./before.wav', './after.wav', {
+  transcriptA: 'Original text',
+  transcriptB: 'Modified text'
 });
-console.log(diff);
 ```
 
-Important notes before installing:
-
-- Build: make sure the package is built (JS + types) before installing from a local folder or publishing. From this repo run:
-
-```bash
-npm install
-npm run build
-```
-
-Installation options for testing in another project
-
-- 1) Quick local install (recommended for testing)
-
-```bash
-# from the other project's root
-npm install /absolute/or/relative/path/to/smart-audio-diff
-```
-
-- 2) Pack and install (mirrors publish)
-
-```bash
-# in this package
-npm pack
-# in the other project
-npm install /path/to/smart-audio-diff-1.0.0.tgz
-```
-
-- 3) Link for live development (updates require rebuild)
-
-```bash
-# in this package
-npm link
-# in the other project
-npm link smart-audio-diff
-```
-
-Troubleshooting
-
-- If you see "does not provide an export named 'compareAudio'" when using `import { compareAudio } ...`, ensure the package was built as ESM and installed so your consumer resolves the ESM entry (`dist/esm`). If you can't rebuild immediately, you can use a namespace import as a temporary workaround:
-
-```js
-import * as pkg from 'smart-audio-diff';
-const { compareAudio } = pkg;
-```
-
-Publishing to npm
-
-- Bump the version, build, and publish:
-
-```bash
-npm run build
-npm version patch   # or minor/major
-npm publish --access public
-```
-
-The package includes both ESM and CommonJS builds and an `exports` field so `import { compareAudio } from 'smart-audio-diff'` works in ESM consumers and `require('smart-audio-diff')` works in CommonJS consumers.
-
-If you want, I can add a short `examples/demo.js` file to this repo that shows exact usage and can be run after `npm install` in a test project.
+---
 
 ## Contributing
 
-- Fork the repo - make small, focused PRs.
-- Use hyphen-style bullets for new README entries.
-- Add tests for new behavior.
+We welcome contributions! Here's how to set up the project for development:
 
-## Contact
+### Prerequisites
 
-- Open an issue or PR on the repo for questions or contributions.
+- Node.js 18+
+- npm or yarn
+- Git
+
+### Setup
+
+1. **Clone the repository:**
+   \`\`\`bash
+   git clone https://github.com/Zyam-1/Smart-Audio-Diff.git
+   cd Smart-Audio-Diff
+   \`\`\`
+
+2. **Install dependencies:**
+   \`\`\`bash
+   npm install
+   \`\`\`
+
+3. **Build the TypeScript:**
+   \`\`\`bash
+   npm run build
+   \`\`\`
+
+### Development Workflow
+
+**Running TypeScript compiler in watch mode:**
+\`\`\`bash
+npm run build -- --watch
+\`\`\`
+
+**Linting:**
+\`\`\`bash
+npm run lint
+\`\`\`
+
+**Formatting:**
+\`\`\`bash
+npm run format
+\`\`\`
+
+**Testing:**
+\`\`\`bash
+npm test
+\`\`\`
+
+### Project Structure
+
+\`\`\`
+src/
+├── index.ts                 # Main entry point, exports compareAudio
+├── audio/
+│   ├── audioProcessor.ts    # WAV file reading and waveform extraction
+│   ├── waveFormDiff.ts      # Waveform comparison logic
+│   └── transcriptDiff.ts    # Transcript comparison using diff-match-patch
+├── types/
+│   └── diff.ts              # TypeScript type definitions
+└── utils/
+    └── fileUtils.ts         # File validation utilities
+\`\`\`
+
+### Making Changes
+
+1. **Create a feature branch:**
+   \`\`\`bash
+   git checkout -b feature/your-feature-name
+   \`\`\`
+
+2. **Make your changes:**
+   - Keep commits focused and descriptive
+   - Follow the existing code style
+   - Ensure TypeScript compiles without errors
+
+3. **Test your changes:**
+   \`\`\`bash
+   npm run build
+   npm run lint
+   npm test
+   \`\`\`
+
+4. **Push and create a pull request:**
+   \`\`\`bash
+   git push origin feature/your-feature-name
+   \`\`\`
+
+### Guidelines
+
+- Use **TypeScript** for all code (no plain JavaScript in src/)
+- Add **JSDoc comments** for public APIs
+- Keep functions **single-responsibility**
+- Use **hyphens** in file names
+- Test your changes with real WAV files if modifying audio processing
+- Update README if adding new features or APIs
+
+### Common Issues
+
+**Issue: "Cannot find module" errors**
+\`\`\`bash
+# Rebuild the project
+npm run build
+\`\`\`
+
+**Issue: Type errors**
+\`\`\`bash
+# Check TypeScript configuration
+npx tsc --noEmit
+\`\`\`
+
+**Issue: ESLint errors**
+\`\`\`bash
+# Format and fix auto-fixable issues
+npm run format
+npm run lint -- --fix
+\`\`\`
 
 ---
+
+## License
+
+MIT © Zyam
+
+## Contact & Support
+
+- **Issues:** [GitHub Issues](https://github.com/Zyam-1/Smart-Audio-Diff/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/Zyam-1/Smart-Audio-Diff/discussions)
+- **Author:** Zyam
+
+---
+
+**Happy diffing! 🎵**
