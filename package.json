@@ -1,6 +1,6 @@
 {
   "name": "smart-audio-diff",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A TypeScript audio diffing library for generating and applying waveform-based changes between audio files.",
   "keywords": [
     "audio",
