@@ -3,6 +3,8 @@ import { compareWaveforms } from "./audio/waveFormDiff.js";
 import { compareTranscripts } from "./audio/transcriptDiff.js";
 import { DiffResult } from "./types/diff.js";
 import { findOffset } from "./audio/alignment.js";
+import { normalizeAudio } from "./audio/normalizeAudio.js";
+
 
 //Main Functionality to compare two audio files and their transcripts
 
@@ -15,6 +17,11 @@ export const compareAudio = async (
         //Extract WaveForms directly from WAV files (no ffmpeg needed)
         let waveA = await getWaveForm(fileA);
         let waveB = await getWaveForm(fileB);
+
+
+        //Normalize Audio
+        waveA = normalizeAudio(waveA);
+        waveB = normalizeAudio(waveB);
 
         // -- Alignment Logic
         const offset = findOffset(waveA, waveB, 44100);
