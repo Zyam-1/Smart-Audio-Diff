@@ -2,6 +2,7 @@ import { getWaveForm } from "./audio/audioProcessor.js";
 import { compareWaveforms } from "./audio/waveFormDiff.js";
 import { compareTranscripts } from "./audio/transcriptDiff.js";
 import { DiffResult } from "./types/diff.js";
+import { findOffset } from "./audio/alignment.js";
 
 //Main Functionality to compare two audio files and their transcripts
 
@@ -11,16 +12,33 @@ export const compareAudio = async (
     options?: { transcriptA?: string; transcriptB?: string }
 ): Promise<DiffResult> => {
     try {
-        console.log('Reading and processing audio files...');
-        
         //Extract WaveForms directly from WAV files (no ffmpeg needed)
         let waveA = await getWaveForm(fileA);
         let waveB = await getWaveForm(fileB);
 
-        let segments = compareWaveforms(waveA, waveB);
+        // -- Alignment Logic
+        const offset = findOffset(waveA, waveB, 44100);
+
+        const sampleRate = 44100;
+        const offsetSamples = Math.round(offset * sampleRate);
+
+        let alignedWaveB = waveB;
+
+        if (offsetSamples > 0) {
+            // B is late, cut the start
+            alignedWaveB = waveB.slice(offsetSamples);
+        } else if (offsetSamples < 0) {
+            // B is early, pad with silence
+            const padding = new Array(Math.abs(offsetSamples)).fill(0);
+            alignedWaveB = [...padding, ...waveB];
+        }
+        // Alignment Logic ends
+
+
+        let segments = compareWaveforms(waveA, alignedWaveB);
 
         let transcriptDiff: string[] = [];
-        
+
         if (options?.transcriptA && options?.transcriptB) {
             transcriptDiff = compareTranscripts(options.transcriptA, options.transcriptB);
         }
@@ -28,7 +46,8 @@ export const compareAudio = async (
         return {
             segments,
             transcriptDiff,
-            waveformDiff: []
+            waveformDiff: [],
+            detectedOffset: offset
         }
 
     } catch (error) {
