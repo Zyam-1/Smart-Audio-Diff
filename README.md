@@ -3,35 +3,29 @@
 A TypeScript audio diffing library for comparing WAV audio files and their transcripts. Computes differences between audio waveforms and text transcripts with detailed segment analysis.
 
 **Features:**
-- 🔊 Compare audio waveforms between two WAV files
-- 📝 Compare text transcripts using diff-match-patch
-- 📊 Get detailed segment information with timing (start/end in seconds)
-- 🚀 Pure TypeScript with full type safety
-- 📦 ESM-first, lightweight library
+- 🔊 **Compare Audio Waveforms**: Detects differences between two WAV files.
+- 🎚️ **Volume Normalization**: Automatically normalizes audio levels before comparison to handle volume differences.
+- ⏱️ **Audio Alignment**: Automatically aligns audio files to account for timing offsets.
+- 📝 **Transcript Comparison**: Compare text transcripts using diff-match-patch.
+- 📊 **Detailed Analysis**: Get segment information with precise timing (start/end in seconds).
+- 🚀 **Pure TypeScript**: Full type safety and lightweight.
+- 📦 **ESM-first**: Modern module structure.
 
 ## Installation
-
-### From npm
 
 ```bash
 npm install smart-audio-diff
 ```
 
-### From GitHub (Development)
-
-```bash
-npm install https://github.com/Zyam-1/Smart-Audio-Diff.git
-```
-
 ## Prerequisites
 
-This package works with WAV audio files. Ensure your audio files are in WAV format before using this library.
+This package works with **WAV** audio files. Ensure your audio files are in WAV format before using this library.
 
 ## Usage
 
 ### Basic Comparison
 
-Compare two WAV audio files:
+Compare two WAV audio files. The library will automatically normalize volume and align the audio tracks before comparing.
 
 ```javascript
 import { compareAudio } from 'smart-audio-diff';
@@ -40,6 +34,7 @@ async function compareSongs() {
   try {
     const diff = await compareAudio('./song_original.wav', './song_modified.wav');
     
+    console.log('Detected Offset:', diff.detectedOffset);
     console.log('Waveform Segments:', diff.segments);
     // Output: [
     //   { start: 0, end: 2.5, type: 'unchanged' },
@@ -85,13 +80,14 @@ compareWithText();
 
 ### Return Value
 
-The \`compareAudio\` function returns a \`DiffResult\` object:
+The `compareAudio` function returns a `DiffResult` object:
 
 ```typescript
 interface DiffResult {
   segments: DiffSegment[];        // Waveform diff segments with timing
   transcriptDiff: string[];       // Transcript differences as strings
   waveformDiff: number[];         // Raw waveform diff data
+  detectedOffset: number;         // Time offset in seconds detected between files
 }
 
 interface DiffSegment {
@@ -103,20 +99,20 @@ interface DiffSegment {
 
 ## API Reference
 
-### \`compareAudio(fileA, fileB, options?)\`
+### `compareAudio(fileA, fileB, options?)`
 
 Compares two audio files and optionally their transcripts.
 
 **Parameters:**
-- \`fileA\` (string) - Path to the first WAV audio file
-- \`fileB\` (string) - Path to the second WAV audio file
-- \`options\` (optional object)
-  - \`transcriptA\` (string) - Transcript of first audio
-  - \`transcriptB\` (string) - Transcript of second audio
+- `fileA` (string) - Path to the first WAV audio file
+- `fileB` (string) - Path to the second WAV audio file
+- `options` (optional object)
+  - `transcriptA` (string) - Transcript of first audio
+  - `transcriptB` (string) - Transcript of second audio
 
-**Returns:** \`Promise<DiffResult>\` - Comparison results with segments and transcript diffs
+**Returns:** `Promise<DiffResult>` - Comparison results with segments, transcript diffs, and detected offset.
 
-**Throws:** Error if files don't exist or are invalid formats
+**Throws:** Error if files don't exist or are invalid formats.
 
 **Example:**
 ```javascript
@@ -141,64 +137,66 @@ We welcome contributions! Here's how to set up the project for development:
 ### Setup
 
 1. **Clone the repository:**
-   \`\`\`bash
+   ```bash
    git clone https://github.com/Zyam-1/Smart-Audio-Diff.git
    cd Smart-Audio-Diff
-   \`\`\`
+   ```
 
 2. **Install dependencies:**
-   \`\`\`bash
+   ```bash
    npm install
-   \`\`\`
+   ```
 
 3. **Build the TypeScript:**
-   \`\`\`bash
+   ```bash
    npm run build
-   \`\`\`
+   ```
 
 ### Development Workflow
 
 **Running TypeScript compiler in watch mode:**
-\`\`\`bash
+```bash
 npm run build -- --watch
-\`\`\`
+```
 
 **Linting:**
-\`\`\`bash
+```bash
 npm run lint
-\`\`\`
+```
 
 **Formatting:**
-\`\`\`bash
+```bash
 npm run format
-\`\`\`
+```
 
 **Testing:**
-\`\`\`bash
+```bash
 npm test
-\`\`\`
+```
 
 ### Project Structure
 
-\`\`\`
+```
 src/
 ├── index.ts                 # Main entry point, exports compareAudio
 ├── audio/
 │   ├── audioProcessor.ts    # WAV file reading and waveform extraction
 │   ├── waveFormDiff.ts      # Waveform comparison logic
-│   └── transcriptDiff.ts    # Transcript comparison using diff-match-patch
+│   ├── transcriptDiff.ts    # Transcript comparison using diff-match-patch
+│   ├── alignment.ts         # Audio alignment logic
+│   └── normalizeAudio.ts    # Volume normalization logic
 ├── types/
 │   └── diff.ts              # TypeScript type definitions
 └── utils/
     └── fileUtils.ts         # File validation utilities
-\`\`\`
+```
 
 ### Making Changes
 
 1. **Create a feature branch:**
-   \`\`\`bash
+   ```bash
    git checkout -b feature/your-feature-name
-   \`\`\`
+   ```
 
 2. **Make your changes:**
    - Keep commits focused and descriptive
@@ -206,16 +204,16 @@ src/
    - Ensure TypeScript compiles without errors
 
 3. **Test your changes:**
-   \`\`\`bash
+   ```bash
    npm run build
    npm run lint
    npm test
-   \`\`\`
+   ```
 
 4. **Push and create a pull request:**
-   \`\`\`bash
+   ```bash
    git push origin feature/your-feature-name
-   \`\`\`
+   ```
 
 ### Guidelines
 
@@ -229,23 +227,23 @@ src/
 ### Common Issues
 
 **Issue: "Cannot find module" errors**
-\`\`\`bash
+```bash
 # Rebuild the project
 npm run build
-\`\`\`
+```
 
 **Issue: Type errors**
-\`\`\`bash
+```bash
 # Check TypeScript configuration
 npx tsc --noEmit
-\`\`\`
+```
 
 **Issue: ESLint errors**
-\`\`\`bash
+```bash
 # Format and fix auto-fixable issues
 npm run format
 npm run lint -- --fix
-\`\`\`
+```
 
 ---
 
