@@ -40,10 +40,7 @@ export const compareAudio = async (
             alignedWaveB = [...padding, ...waveB];
         }
         // Alignment Logic ends
-
-
         let segments = compareWaveforms(waveA, alignedWaveB);
-
         let transcriptDiff: string[] = [];
 
         if (options?.transcriptA && options?.transcriptB) {
