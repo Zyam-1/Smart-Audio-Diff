@@ -1,40 +1,26 @@
-import FFT from 'fft-js';
-
+import fft from 'fft-js';
 
 export const getSpectogram = (audioData: number[], sampleRate: number): number[][] => {
     const fftSize = 2048;
-    let f = new FFT(fftSize);
-    let output = new Array(fftSize);
-    let magnitudes: number[][] = [];
-
-    // Step size (overlap of 50%)
-    let step = fftSize / 2;
+    const magnitudes: number[][] = [];
+    const step = fftSize / 2;
 
     for (let i = 0; i < audioData.length - fftSize; i += step) {
-        let frame = audioData.slice(i, i + fftSize);
+        const frame = audioData.slice(i, i + fftSize);
 
-        //Applying Hann Window to reduce spectral leakage
-        let windowed = frame.map((val, idx) => {
-            val * (0.5 * (1 - Math.cos((2 * Math.PI * idx) / (fftSize - 1))));
-        })
+        // Apply Hann Window
+        const windowed = frame.map((val, idx) =>
+            val * (0.5 * (1 - Math.cos((2 * Math.PI * idx) / (fftSize - 1))))
+        );
 
-        f.realTransform(output, windowed);
+        // fft-js uses a direct function call, not a class
+        const phasors = fft.fft(windowed);
+        const freqs = fft.util.fftMag(phasors);
 
-        let frameMags: number[] = [];
-
-        // We only need to extract first half (Nyquist frequency)
-        for (let j = 0; j < fftSize / 2; j++) {
-            let real = output[j * 2];
-            let imag = output[j * 2 + 1];
-
-            //Calculate magnitude
-            frameMags.push(Math.sqrt(real * real + imag * imag));
-        }
-        magnitudes.push(frameMags);
+        magnitudes.push(freqs);
     }
     return magnitudes;
 }
-
 
 export const compareSpectra = (specA: number[][], specB: number[][]): number[] => {
     let diffs: number[] = [];

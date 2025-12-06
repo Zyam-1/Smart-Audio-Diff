@@ -14,10 +14,9 @@ export const compareAudio = async (
     options?: { transcriptA?: string; transcriptB?: string }
 ): Promise<DiffResult> => {
     try {
-        //Extract WaveForms directly from WAV files (no ffmpeg needed)
+        //Extract WaveForms directly from WAV files
         let waveA = await getWaveForm(fileA);
         let waveB = await getWaveForm(fileB);
-
 
         //Normalize Audio
         waveA = normalizeAudio(waveA);
